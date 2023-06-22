@@ -24,9 +24,21 @@ import java.net.UnknownHostException;
 public class ChatClient {
 
     // <<-CONSTANTS->>
+    /**
+     * Minimum valid port number.
+     */
     private static final int MIN_PORT_NUMBER = 1;
+    /**
+     * Maximum valid port number.
+     */
     private static final int MAX_PORT_NUMBER = 65535;
+    /**
+     * Error prefix for error messages.
+     */
     private static final String ERROR = "E R R O R: ";
+    /**
+     * System prefix for error messages.
+     */
     private static final String SYSTEM = "S Y S T E M: ";
 
     // <<-FIELDS->>
@@ -116,9 +128,13 @@ public class ChatClient {
     }
 
     /**
+     * The main method of the EchoClient class.<br>
+     * <br>
+     * The first argument should be the IP address of the server<br>
+     * to connect to, and the second argument should be the port number.
      *
-     * @param args
-     * @throws IOException
+     * @param args command-line arguments passed to the program.
+     * @throws IOException  if an I/O error occurs while establishing the connection.
      */
     public static void main(String[] args) throws IOException {
         // To start the client is necessary 2 arguments

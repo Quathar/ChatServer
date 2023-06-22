@@ -13,13 +13,14 @@ repositories {
 
 javafx {
     // To make the app works you have to go to
-    // Run >> Edit Configurations >>
-    // the go to the specific application and
-    // click "Modify options" >> Add VM options
-    // and paste this command in the new field
+    // Run >> Edit Configurations
+    // then go to the specific application and
+    // click "Modify options" >> "Add VM options"
+    // and paste this command in the new field that will appear
     // --module-path "{path to you javafx libraries (change this)}" --add-modules javafx.controls,javafx.fxml
     version = "19"
-    modules("javafx.controls", "javafx.graphics", "javafx.base", "javafx.fxml")
+    modules("javafx.controls")
+//    modules("javafx.controls", "javafx.graphics", "javafx.base", "javafx.fxml")
 }
 
 //application {

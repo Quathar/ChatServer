@@ -1,6 +1,7 @@
 plugins {
-    id("java")
-    id("io.freefair.lombok") version "8.0.1"
+    application // 'application' extends 'java' plugin
+    id("io.freefair.lombok")       version "8.0.1"
+    id("org.openjfx.javafxplugin") version "0.0.13"
 }
 
 group = "com.quathar"
@@ -10,15 +11,26 @@ repositories {
     mavenCentral()
 }
 
-//val versionJFX = "123.2.2";
+javafx {
+    // To make the app works you have to go to
+    // Run >> Edit Configurations >>
+    // the go to the specific application and
+    // click "Modify options" >> Add VM options
+    // and paste this command in the new field
+    // --module-path "{path to you javafx libraries (change this)}" --add-modules javafx.controls,javafx.fxml
+    version = "19"
+    modules("javafx.controls", "javafx.graphics", "javafx.base", "javafx.fxml")
+}
+
+//application {
+//    // Set the main class for the application
+//    mainClass.set("com.quathar.chatserver.Test")
+//}
+
 dependencies {
     // Lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-
-    // JavaFX
-//    implementation("org.openjfx:javafx-controls:${versionJFX}")
-//    implementation("org.openjfx:javafx-fxml:${versionJFX}")
 
     // JUnit
     testImplementation(platform("org.junit:junit-bom:5.9.1"))

@@ -156,7 +156,9 @@ public class ChatServer {
             case "/people" -> {
                 sb.append("People connected:").append(System.getProperty("line.separator"));
                 _chatPeers.keySet()
-                        .forEach(nick -> sb.append("> ").append(nick).append(System.getProperty("line.separator")));
+                          .forEach(nick -> sb.append("> ")
+                                             .append(nick)
+                                             .append(System.getProperty("line.separator")));
             }
             case "/port" -> sb.append(_server.getLocalPort());
             default -> sb.append("That command doesn't exist, try '/help' :(((");

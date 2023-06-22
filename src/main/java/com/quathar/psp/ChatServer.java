@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 /**
  * <h1>ChatServer</h1>
- *
+ * <br>
  * This is a chat server that manages the users that are
  *
  * @since 2022-11-15

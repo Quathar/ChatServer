@@ -2,7 +2,7 @@ package com.quathar.psp;
 
 /**
  * <h1>Prompt</h1>
- *
+ * <br>
  * This class contains the codes to change the prompt color.
  *
  * @since 2022-11-21

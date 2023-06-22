@@ -1,4 +1,4 @@
-package com.quathar.psp;
+package com.quathar.chatserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,10 +41,12 @@ public class ChatPeer extends Thread {
 
     // <<-METHOD->>
     private String statusMessage(int status) {
-        StringBuilder sb = new StringBuilder(Prompt.ANSI_RED);
+        StringBuilder sb = new StringBuilder(Prompt.ANSI_RED.getCode());
 
         return switch (status) {
-            case 0  -> sb.replace(0, 10, Prompt.ANSI_RESET).append("=".repeat(50)).toString();
+            case 0  -> sb.replace(0, 10, Prompt.ANSI_RESET.getCode())
+                         .append("=".repeat(50))
+                         .toString();
             case 1  -> sb.append("E R R O R: Nickname is blank").toString();
             case 2  -> sb.append("E R R O R: Nickname contains spaces").toString();
             case 3  -> sb.append("E R R O R: Nickname already exists").toString();
@@ -73,12 +75,12 @@ public class ChatPeer extends Thread {
         while (status != 0) {
             _socketOut.printf("%sEnter your nickname: %n", Prompt.ANSI_CYAN);
             nickname.replace(0, nickname.length(), _socketIn.readLine());
-            if (_nickname.equals(nickname.toString())) break;
+            if (_nickname.contentEquals(nickname)) break;
             status = _chatServer.nicknameInspection(nickname.toString());
             _socketOut.println(statusMessage(status));
         }
 
-        if (!_nickname.equals(nickname.toString())) {
+        if (!_nickname.contentEquals(nickname)) {
             _chatServer.changeNickname(nickname.toString(), _nickname);
             _nickname = nickname.toString();
             _socketOut.printf("%sS Y S T E M: The nickname was successfully changed ;)%n", Prompt.ANSI_YELLOW);

@@ -1,4 +1,4 @@
-package com.quathar.psp;
+package com.quathar.chatserver;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,8 +13,8 @@ import java.util.HashMap;
  * This is a chat server that manages the users that are
  *
  * @since 2022-11-15
- * @author Q
  * @version 3.0
+ * @author Q
  */
 public class ChatServer {
 
@@ -32,7 +32,8 @@ public class ChatServer {
             _server = new ServerSocket(portNumber);
             _chatPeers = new HashMap<>();
             start();
-            _server.close(); // De momento lo dejamos así, pero hay que cerrarlo bien
+            // TODO: For the time being we leave it like this, but it must be properly closed.
+            _server.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -61,21 +62,21 @@ public class ChatServer {
     public boolean nicknameExists(String nickname) {
         // Case-sensitive
         return _chatPeers.keySet()
-                .stream()
-                .anyMatch(nick -> nick.equalsIgnoreCase(nickname));
+                         .stream()
+                         .anyMatch(nick -> nick.equalsIgnoreCase(nickname));
         // Works but it doesn't detect between upper and lower case
 //        return _chatPeers.containsKey(nickname);
     }
 
     public synchronized int nicknameInspection(String nickname) {
-        if (nickname.isBlank()) return 1;
-        if (nickname.contains(" ")) return 2;
+        if (nickname.isBlank())       return 1;
+        if (nickname.contains(" "))   return 2;
         if (nicknameExists(nickname)) return 3;
         return 0;
     }
 
     public void privateMessage(String srcNickname, String dstNickname, String msg) {
-        StringBuilder sb = new StringBuilder(Prompt.ANSI_PURPLE);
+        StringBuilder sb = new StringBuilder(Prompt.ANSI_PURPLE.getCode());
 
         ChatPeer chatPeer = _chatPeers.get(dstNickname);
         if (chatPeer != null)
@@ -83,7 +84,7 @@ public class ChatServer {
         else _chatPeers
                 .get(srcNickname)
                 .send(sb
-                        .replace(0, sb.length(), Prompt.ANSI_RED)
+                        .replace(0, sb.length(), Prompt.ANSI_RED.getCode())
                         .append("E R R O R: That user doesn't exist").toString()
                 );
     }
@@ -93,7 +94,7 @@ public class ChatServer {
     }
 
     private String commandList(String command, String nickname) {
-        StringBuilder sb = new StringBuilder(Prompt.ANSI_YELLOW);
+        StringBuilder sb = new StringBuilder(Prompt.ANSI_YELLOW.getCode());
         switch (command) {
             case "/help" -> sb.append("Commands:").append(System.getProperty("line.separator"))
                     .append("/help   -> Shows a list of the server commands"    ).append(System.getProperty("line.separator"))

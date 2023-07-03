@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="0.Server" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.quathar.chatserver.ChatServer" />
+    <module name="ChatServer.main" />
+    <option name="PROGRAM_PARAMETERS" value="60000" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

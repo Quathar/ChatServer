@@ -1,5 +1,16 @@
 package com.quathar.chatserver;
 
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +18,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  * <h1>ChatClient</h1>
@@ -21,7 +33,7 @@ import java.net.UnknownHostException;
  * @version 3.0
  * @author Q
  */
-public class ChatClient {
+public class ChatClient extends Application {
 
     // <<-CONSTANTS->>
     /**
@@ -40,6 +52,10 @@ public class ChatClient {
      * System prefix for error messages.
      */
     private static final String SYSTEM = "S Y S T E M: ";
+    /**
+     * The frame title.
+     */
+    private static final String FRAME_TITLE = "Chat Server";
 
     // <<-FIELDS->>
     /**
@@ -59,90 +75,10 @@ public class ChatClient {
      */
     private BufferedReader _stdIn;
 
-    // <<-CONSTRUCTOR->>
-    /**
-     * Constructs a new ChatClient object that connects to the specified server
-     *
-     * @param inetAddress the IP address of the server to connect to
-     * @param portNumber the port number of the server to connect to
-     */
-    public ChatClient(InetAddress inetAddress, int portNumber) {
-        try {
-            _socket    = new Socket(inetAddress, portNumber);
-            _socketOut = new PrintWriter(_socket.getOutputStream(), true);
-            _socketIn  = new BufferedReader(new InputStreamReader(_socket.getInputStream()));
-            _stdIn     = new BufferedReader(new InputStreamReader(System.in));
-            start();
-        } catch(IOException e) {
-            System.err.println(ERROR + "ChatClient() -> IOException");
-        } catch (InterruptedException e) {
-            System.err.println(ERROR + "ChatClient() -> InterruptedException");
-        }
-    }
-
     // <<-METHODS->>
-    /**
-     * Starts the ChatClient by creating and starting two separate threads:<br>
-     * <ul>
-     *     <li><b>Standard Thread:</b> Reads user input from standard input (console) and sends it to the server.</li>
-     *     <li><b>Network Thread:</b> Receives messages from the server and displays them to the user.</li>
-     * @throws IOException if an I/O error occurs while reading or writing data
-     * @throws InterruptedException if any thread interrupts the current thread
-     */
-    private void start() throws IOException, InterruptedException {
-        // Standard Thread
-        // This thread receives the standard input (user) and sends the message to the server
-        Thread stdThread = new Thread(() -> {
-            try {
-                String userInput;
-                while (!"/exit".equalsIgnoreCase(userInput = _stdIn.readLine()))
-                    _socketOut.println(userInput);
-            } catch (IOException e) {
-                System.err.println(ERROR + "stdThread()");
-            }
-        });
-
-        // Network Thread
-        // This thread receives messages from the server and displays them to the user
-        Thread nwkThread = new Thread(() -> {
-            try {
-                String socketInput;
-                while ((socketInput = _socketIn.readLine()) != null)
-                    System.out.println(socketInput);
-            } catch (IOException e) {
-                System.out.println(SYSTEM + "bye!");
-            }
-        });
-
-        stdThread.start();
-        nwkThread.start();
-
-        // The Client waits here until the client close the connection (which leads to thread death)
-        stdThread.join();
-
-        // When the socket is closed it triggers the 'nwkThread' exception (IOException)
-        // When closing the 'socket', 'socketOut' (PrintWriter) y 'socketIn' (BufferedReader)
-        _socket.close();
-        // Then finally we close the 'stdIn' (BufferedReader)
-        _stdIn.close();
-    }
-
-    /**
-     * The main method of the EchoClient class.<br>
-     * <br>
-     * The first argument should be the IP address of the server<br>
-     * to connect to, and the second argument should be the port number.
-     *
-     * @param args command-line arguments passed to the program.
-     * @throws IOException  if an I/O error occurs while establishing the connection.
-     */
-    public static void main(String[] args) throws IOException {
-        // To start the client is necessary 2 arguments
-        // the <IP> and the <Port> of the server you want to connect to
-        if (args.length > 2) {
-            System.err.println("Usage: java EchoClient <ip address> <port number>");
-            System.exit(1);
-        }
+    @Override
+    public void init() {
+        String[] args = getParameters().getRaw().toArray(new String[0]);
 
         // Checks for 'IP Address'
         InetAddress inetAddress = null;
@@ -155,6 +91,9 @@ public class ChatClient {
             }
         } catch (UnknownHostException e) {
             System.err.printf("Usage: <ip address> %s is invalid%n", args[0]);
+            System.exit(1);
+        } catch (IOException e) {
+            System.err.printf("<ip address> %s is not reachable%n", args[0]);
             System.exit(1);
         }
 
@@ -171,8 +110,126 @@ public class ChatClient {
             System.exit(1);
         }
 
-        // Init ChatClient
-        new ChatClient(inetAddress, portNumber);
+        try {
+            _socket    = new Socket(inetAddress, portNumber);
+            _socketOut = new PrintWriter(_socket.getOutputStream(), true);
+            _socketIn  = new BufferedReader(new InputStreamReader(_socket.getInputStream()));
+            _stdIn     = new BufferedReader(new InputStreamReader(System.in));
+        } catch(IOException e) {
+            System.err.println(ERROR + "ChatClient() -> IOException");
+        }
+    }
+
+    private void sendMessage(TextField input, TextArea display) {
+        String message = input.getText();
+        display.appendText(message + System.lineSeparator());
+        _socketOut.println(message);
+        input.clear();
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        // TODO: See why this is null after being initialized in init() method
+        // TODO: See why this is null after being initialized in init() method
+        // TODO: See why this is null after being initialized in init() method
+        // TODO: See why this is null after being initialized in init() method
+        // TODO: See why this is null after being initialized in init() method
+        // TODO: See why this is null after being initialized in init() method
+        System.out.println(_socket == null ? "Socket is null" : "Socket isn't null");
+        System.out.println(_socketOut == null ? "_socketOut is null" : "_socketOut isn't null");
+        System.out.println(_socketIn == null ? "_socketIn is null" : "_socketIn isn't null");
+
+        primaryStage.setTitle(FRAME_TITLE);
+
+        TextArea panelTA = new TextArea();
+        panelTA.setEditable(false);
+        TextField inputTF = new TextField();
+        inputTF.setOnAction(event -> sendMessage(inputTF, panelTA));
+        Button btnSend = new Button("Send");
+        btnSend.setOnAction(event -> sendMessage(inputTF, panelTA));
+
+        // Layouts
+        VBox verticalLayout = new VBox(panelTA);
+        verticalLayout.setPadding(new Insets(10));
+
+        HBox horizontalLayout = new HBox(inputTF, btnSend);
+        horizontalLayout.setSpacing(10);
+        horizontalLayout.setPadding(new Insets(10));
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(verticalLayout);
+        borderPane.setBottom(horizontalLayout);
+
+        // Set scene and show the stage
+        Scene scene = new Scene(borderPane, 400, 300);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // Network Thread
+        // This thread receives messages from the server and displays them to the user
+        new Thread(() -> {
+            try {
+                String socketInput;
+                while ((socketInput = _socketIn.readLine()) != null)
+                    panelTA.appendText(socketInput + System.lineSeparator());
+            } catch (IOException e) {
+                panelTA.appendText(SYSTEM + "bye!");
+            }
+        }).start();
+
+
+//        // Standard Thread
+//        // This thread receives the standard input (user) and sends the message to the server
+//        Thread stdThread = new Thread(() -> {
+//            try {
+//                String userInput;
+//                while (!"/exit".equalsIgnoreCase(userInput = _stdIn.readLine()))
+//                    _socketOut.println(userInput);
+//            } catch (IOException e) {
+//                System.err.println(ERROR + "stdThread()");
+//            }
+//        });
+//
+//
+//        stdThread.start();
+//        nwkThread.start();
+//
+//        // The Client waits here until the client close the connection (which leads to thread death)
+//        stdThread.join();
+//
+    }
+
+    @Override
+    public void stop() {
+        try {
+            // When the socket is closed it triggers the 'nwkThread' exception (IOException)
+            // When closing the 'socket', 'socketOut' (PrintWriter) y 'socketIn' (BufferedReader)
+            _socket.close();
+            // Then finally we close the 'stdIn' (BufferedReader)
+            _stdIn.close();
+        } catch (IOException ioE) {
+
+        }
+    }
+
+    /**
+     * The main method of the EchoClient class.<br>
+     * <br>
+     * The first argument should be the IP address of the server<br>
+     * to connect to, and the second argument should be the port number.
+     *
+     * @param args command-line arguments passed to the program.
+     */
+    public static void main(String[] args) {
+        // To start the client is necessary 2 arguments
+        // the <IP> and the <Port> of the server you want to connect to
+        if (args.length > 2) {
+            System.err.println("Usage: java EchoClient <ip address> <port number>");
+            System.exit(1);
+        }
+
+        // Launch UI
+        launch(args);
     }
 
 }

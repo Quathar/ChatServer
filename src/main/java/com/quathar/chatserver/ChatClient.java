@@ -18,7 +18,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.List;
 
 /**
  * <h1>ChatClient</h1>
@@ -70,10 +69,6 @@ public class ChatClient extends Application {
      * Socket Input
      */
     private BufferedReader _socketIn;
-    /**
-     * Standard Input (keyboard)
-     */
-    private BufferedReader _stdIn;
 
     // <<-METHODS->>
     @Override
@@ -116,7 +111,6 @@ public class ChatClient extends Application {
             _socket    = new Socket(inetAddress, portNumber);
             _socketOut = new PrintWriter(_socket.getOutputStream(), true);
             _socketIn  = new BufferedReader(new InputStreamReader(_socket.getInputStream()));
-            _stdIn     = new BufferedReader(new InputStreamReader(System.in));
         } catch(IOException e) {
             System.err.println(ERROR + "ChatClient() -> IOException");
         }
@@ -131,14 +125,6 @@ public class ChatClient extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // TODO: See why this is null after being initialized in init() method
-        // TODO: See why this is null after being initialized in init() method
-        // TODO: See why this is null after being initialized in init() method
-        // TODO: See why this is null after being initialized in init() method
-        System.out.println(_socket == null ? "Socket is null" : "Socket isn't null");
-        System.out.println(_socketOut == null ? "_socketOut is null" : "_socketOut isn't null");
-        System.out.println(_socketIn == null ? "_socketIn is null" : "_socketIn isn't null");
-
         // Here we build the interface
         primaryStage.setTitle(FRAME_TITLE);
 
@@ -177,27 +163,6 @@ public class ChatClient extends Application {
                 panelTA.appendText(SYSTEM + "bye!");
             }
         }).start();
-
-
-//        // Standard Thread
-//        // This thread receives the standard input (user) and sends the message to the server
-//        Thread stdThread = new Thread(() -> {
-//            try {
-//                String userInput;
-//                while (!"/exit".equalsIgnoreCase(userInput = _stdIn.readLine()))
-//                    _socketOut.println(userInput);
-//            } catch (IOException e) {
-//                System.err.println(ERROR + "stdThread()");
-//            }
-//        });
-//
-//
-//        stdThread.start();
-//        nwkThread.start();
-//
-//        // The Client waits here until the client close the connection (which leads to thread death)
-//        stdThread.join();
-//
     }
 
     @Override
@@ -206,10 +171,8 @@ public class ChatClient extends Application {
             // When the socket is closed it triggers the 'nwkThread' exception (IOException)
             // When closing the 'socket', 'socketOut' (PrintWriter) y 'socketIn' (BufferedReader)
             _socket.close();
-            // Then finally we close the 'stdIn' (BufferedReader)
-            _stdIn.close();
         } catch (IOException ioE) {
-
+            System.err.println(ERROR + "ChatClient() -> stop() -> IOException");
         }
     }
 

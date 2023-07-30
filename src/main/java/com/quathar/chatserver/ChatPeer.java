@@ -45,11 +45,10 @@ public class ChatPeer extends Thread {
 
     // <<-METHOD->>
     private String statusMessage(int status) {
-        StringBuilder sb = new StringBuilder(Prompt.ANSI_RED.getCode());
+        StringBuilder sb = new StringBuilder();
 
         return switch (status) {
-            case 0  -> sb.replace(0, 10, Prompt.ANSI_RESET.getCode())
-                         .append("=".repeat(50))
+            case 0  -> sb.append("=".repeat(50))
                          .toString();
             case 1  -> sb.append(ERROR + "Nickname is blank").toString();
             case 2  -> sb.append(ERROR + "Nickname contains spaces").toString();
@@ -61,7 +60,7 @@ public class ChatPeer extends Thread {
     private void checkNickname() throws IOException {
         int status = -1;
         while (status != 0) {
-            _socketOut.printf("%sEnter your nickname:%n", Prompt.ANSI_CYAN.getCode());
+            _socketOut.printf("Enter your nickname:%n");
             _nickname = _socketIn.readLine();
             status = _chatServer.nicknameInspection(_nickname);
             _socketOut.println(statusMessage(status));
@@ -72,12 +71,12 @@ public class ChatPeer extends Thread {
 
     private void changeNickname() throws IOException {
         _available = false;
-        _socketOut.printf("%sChanging nickname...%n", Prompt.ANSI_YELLOW.getCode());
+        _socketOut.printf("Changing nickname...%n");
 
         int status = -1;
         StringBuilder nickname = new StringBuilder();
         while (status != 0) {
-            _socketOut.printf("%sEnter your nickname: %n", Prompt.ANSI_CYAN.getCode());
+            _socketOut.printf("Enter your nickname:%n");
             nickname.replace(0, nickname.length(), _socketIn.readLine());
             if (_nickname.contentEquals(nickname)) break;
             status = _chatServer.nicknameInspection(nickname.toString());
@@ -87,8 +86,8 @@ public class ChatPeer extends Thread {
         if (!_nickname.contentEquals(nickname)) {
             _chatServer.changeNickname(nickname.toString(), _nickname);
             _nickname = nickname.toString();
-            _socketOut.printf("%sS Y S T E M: The nickname was successfully changed ;)%n", Prompt.ANSI_YELLOW.getCode());
-        } else _socketOut.printf("%sS Y S T E M: The nick wasn't changed%n", Prompt.ANSI_YELLOW.getCode());
+            _socketOut.printf("S Y S T E M: The nickname was successfully changed ;)%n");
+        } else _socketOut.printf("S Y S T E M: The nick wasn't changed%n");
 
         _available = true;
     }

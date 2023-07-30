@@ -85,6 +85,8 @@ public class ChatClient extends Application {
         try {
             inetAddress = InetAddress.getByName(args[0]);
             // If the application doesn't run, comment this 'if'
+            // If the application doesn't run, comment this 'if'
+            // If the application doesn't run, comment this 'if'
             if (!inetAddress.isReachable(10000)) {
                 System.err.printf("Usage: can't reach <ip address> %s%n", args[0]);
                 System.exit(1);
@@ -133,12 +135,11 @@ public class ChatClient extends Application {
         // TODO: See why this is null after being initialized in init() method
         // TODO: See why this is null after being initialized in init() method
         // TODO: See why this is null after being initialized in init() method
-        // TODO: See why this is null after being initialized in init() method
-        // TODO: See why this is null after being initialized in init() method
         System.out.println(_socket == null ? "Socket is null" : "Socket isn't null");
         System.out.println(_socketOut == null ? "_socketOut is null" : "_socketOut isn't null");
         System.out.println(_socketIn == null ? "_socketIn is null" : "_socketIn isn't null");
 
+        // Here we build the interface
         primaryStage.setTitle(FRAME_TITLE);
 
         TextArea panelTA = new TextArea();
@@ -223,7 +224,7 @@ public class ChatClient extends Application {
     public static void main(String[] args) {
         // To start the client is necessary 2 arguments
         // the <IP> and the <Port> of the server you want to connect to
-        if (args.length > 2) {
+        if (args.length != 2) {
             System.err.println("Usage: java EchoClient <ip address> <port number>");
             System.exit(1);
         }

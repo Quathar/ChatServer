@@ -18,6 +18,7 @@ public class Test extends Application {
 
     private TextArea messageArea;
     private TextField inputField;
+    private String testStr;
 
     Button button;
 
@@ -31,10 +32,13 @@ public class Test extends Application {
         Parameters parameters = getParameters();
         List<String> args = parameters.getRaw();
         System.out.println(args.get(1));
+        testStr = "Test if this is shown in start";
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        System.out.println(testStr);
+
         System.out.println("Start");
         primaryStage.setTitle("Chat Server");
 

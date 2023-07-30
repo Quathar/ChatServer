@@ -6,7 +6,8 @@ import lombok.Getter;
 /**
  * <h1>Prompt</h1>
  * <br>
- * This class contains the codes to change the prompt color.
+ * This class contains the codes to change the prompt color
+ * (in System.out.print, now that there is a javafx interface we don't use this class).
  *
  * @since 2022-11-21
  * @version 2.0

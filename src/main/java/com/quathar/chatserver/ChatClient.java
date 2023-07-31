@@ -2,6 +2,7 @@ package com.quathar.chatserver;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -9,6 +10,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -123,6 +127,15 @@ public class ChatClient extends Application {
         input.clear();
     }
 
+    private void displayServerMessage(TextArea display, String serverMessage) {
+        if (serverMessage.startsWith("a")) {
+            display.appendText("Pasa por aqui" + System.lineSeparator());
+            display.setStyle("-fx-text-fill: yellow");
+            display.setPromptText("S");
+        }
+        display.appendText(serverMessage + System.lineSeparator());
+    }
+
     @Override
     public void start(Stage primaryStage) {
         // Here we build the interface
@@ -130,8 +143,12 @@ public class ChatClient extends Application {
 
         TextArea panelTA = new TextArea();
         panelTA.setEditable(false);
+        panelTA.setFont(Font.font(18));
+        panelTA.setStyle("-fx-text-fill: rgb(60, 60, 60);");
+
         TextField inputTF = new TextField();
         inputTF.setOnAction(event -> sendMessage(inputTF, panelTA));
+        inputTF.setPromptText("Type your message");
         Button btnSend = new Button("Send");
         btnSend.setOnAction(event -> sendMessage(inputTF, panelTA));
 
@@ -146,9 +163,14 @@ public class ChatClient extends Application {
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(verticalLayout);
         borderPane.setBottom(horizontalLayout);
+        borderPane.setStyle("-fx-background-color: lightblue;");
 
         // Set scene and show the stage
-        Scene scene = new Scene(borderPane, 400, 300);
+        Rectangle2D bounds  = Screen.getPrimary().getVisualBounds();
+        double screenWidth  = bounds.getWidth();
+        double screenHeight = bounds.getHeight();
+
+        Scene scene = new Scene(borderPane, screenWidth / 2, screenHeight / 2);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -158,7 +180,7 @@ public class ChatClient extends Application {
             try {
                 String socketInput;
                 while ((socketInput = _socketIn.readLine()) != null)
-                    panelTA.appendText(socketInput + System.lineSeparator());
+                    displayServerMessage(panelTA, socketInput);
             } catch (IOException e) {
                 panelTA.appendText(SYSTEM + "bye!");
             }
